@@ -159,32 +159,32 @@ template BattleshipInit(b) {
   for(var i=0; i<b; i++) {
     for(var j=0; j<b; j++) {
 
-      isCarrierOnPoint[i][i] = IsShipOnPoint(5);
-      isCarrierOnPoint[i][i].ship <== carrier;
-      isCarrierOnPoint[i][i].x <== i;
-      isCarrierOnPoint[i][i].y <== j;
+      isCarrierOnPoint[i][j] = IsShipOnPoint(5);
+      isCarrierOnPoint[i][j].ship <== carrier;
+      isCarrierOnPoint[i][j].x <== i;
+      isCarrierOnPoint[i][j].y <== j;
 
-      isBattleshipOnPoint[i][i] = IsShipOnPoint(4);
-      isBattleshipOnPoint[i][i].ship <== battleship;
-      isBattleshipOnPoint[i][i].x <== i;
-      isBattleshipOnPoint[i][i].y <== j;
+      isBattleshipOnPoint[i][j] = IsShipOnPoint(4);
+      isBattleshipOnPoint[i][j].ship <== battleship;
+      isBattleshipOnPoint[i][j].x <== i;
+      isBattleshipOnPoint[i][j].y <== j;
 
-      isCruiserOnPoint[i][i] = IsShipOnPoint(3);
-      isCruiserOnPoint[i][i].ship <== cruiser;
-      isCruiserOnPoint[i][i].x <== i;
-      isCruiserOnPoint[i][i].y <== j;
+      isCruiserOnPoint[i][j] = IsShipOnPoint(3);
+      isCruiserOnPoint[i][j].ship <== cruiser;
+      isCruiserOnPoint[i][j].x <== i;
+      isCruiserOnPoint[i][j].y <== j;
 
-      isSubmarineOnPoint[i][i] = IsShipOnPoint(3);
-      isSubmarineOnPoint[i][i].ship <== submarine;
-      isSubmarineOnPoint[i][i].x <== i;
-      isSubmarineOnPoint[i][i].y <== j;
+      isSubmarineOnPoint[i][j] = IsShipOnPoint(3);
+      isSubmarineOnPoint[i][j].ship <== submarine;
+      isSubmarineOnPoint[i][j].x <== i;
+      isSubmarineOnPoint[i][j].y <== j;
 
-      isDestroyerOnPoint[i][i] = IsShipOnPoint(2);
-      isDestroyerOnPoint[i][i].ship <== destroyer;
-      isDestroyerOnPoint[i][i].x <== i;
-      isDestroyerOnPoint[i][i].y <== j;
+      isDestroyerOnPoint[i][j] = IsShipOnPoint(2);
+      isDestroyerOnPoint[i][j].ship <== destroyer;
+      isDestroyerOnPoint[i][j].x <== i;
+      isDestroyerOnPoint[i][j].y <== j;
 
-      grid[i][j] <== isCarrierOnPoint[i][i].out + isBattleshipOnPoint[i][i].out + isCruiserOnPoint[i][i].out + isSubmarineOnPoint[i][i].out + isDestroyerOnPoint[i][i].out;
+      grid[i][j] <== isCarrierOnPoint[i][j].out + isBattleshipOnPoint[i][j].out + isCruiserOnPoint[i][j].out + isSubmarineOnPoint[i][j].out + isDestroyerOnPoint[i][j].out;
 
       grid[i][j] * (grid[i][j] - 1) === 0;
     }
