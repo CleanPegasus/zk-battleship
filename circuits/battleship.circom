@@ -1,6 +1,7 @@
 pragma circom  2.1.6;
 
 include "../node_modules/circomlib/circuits/comparators.circom";
+include "../node_modules/circomlib/circuits/pedersen.circom";
 
 // b is the board length. b = 10 (10 x 10)
 template PointConstraint(b) {
@@ -131,6 +132,10 @@ template BattleshipInit(b) {
   signal input cruiser[3][2];
   signal input submarine[3][2];
   signal input destroyer[2][2];
+
+  signal input salt;
+
+  signal output out[2];
   
   signal grid[b][b];
 
@@ -155,6 +160,11 @@ template BattleshipInit(b) {
   component isCruiserOnPoint[b][b];
   component isSubmarineOnPoint[b][b];
   component isDestroyerOnPoint[b][b];
+
+  var boardSize = b * b;
+  component pedersen = Pedersen(boardSize + 1);
+
+  signal pedersenInp[boardSize + 1];
 
   for(var i=0; i<b; i++) {
     for(var j=0; j<b; j++) {
@@ -187,11 +197,17 @@ template BattleshipInit(b) {
       grid[i][j] <== isCarrierOnPoint[i][j].out + isBattleshipOnPoint[i][j].out + isCruiserOnPoint[i][j].out + isSubmarineOnPoint[i][j].out + isDestroyerOnPoint[i][j].out;
 
       grid[i][j] * (grid[i][j] - 1) === 0;
+
+      pedersenInp[i * b + j] <== grid[i][j];
     }
   }
 
+  pedersenInp[boardSize] <== salt;
+
+  pedersen.in <== pedersenInp;
+
+  out <== pedersen.out;
+
 }
 
-// component main = ShipConstraints(10, 3);
-// component main = AlignmentConstraint(4);
 component main = BattleshipInit(10);
