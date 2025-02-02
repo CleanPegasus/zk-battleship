@@ -23,6 +23,7 @@ template PointConstraint(b) {
   lt[0].in[0] <== x;
   lt[0].in[1] <== boardLength;
 
+
   lt[0].out === 1;
 
   gte[1] = GreaterEqThan(8);
@@ -104,24 +105,35 @@ template IsShipOnPoint(n) { // n -> ship size
 
   signal output out;
 
-  component isz[n];
   signal tmp[n];
 
-  isz[0] = IsZero();
-  isz[0].in <== (x - ship[0][0]) + (y - ship[0][1]);
+  component isz[n][2];
 
-  tmp[0] <== isz[0].out;
+  isz[0][0] = IsZero();
+  isz[0][0].in <== x - ship[0][0];
 
-  for(var i=1; i<n; i++) {
-    isz[i] = IsZero();
-    isz[i].in <== (x - ship[i][0]) + (y - ship[i][1]);
-    tmp[i] <== tmp[i - 1] + isz[i].out;
+  isz[0][1] = IsZero();
+  isz[0][1].in <== y - ship[0][1];
+
+  tmp[0] <== (1 - isz[0][0].out) + (1 - isz[0][1].out);
+
+  for(var i = 1; i<n; i++) {
+
+    isz[i][0] = IsZero();
+    isz[i][0].in <== x - ship[i][0];
+
+    isz[i][1] = IsZero();
+    isz[i][1].in <== y - ship[i][1];
+
+    tmp[i] <== tmp[i-1] * ((1 - isz[i][0].out) + (1 - isz[i][1].out));
   }
 
-  0 === tmp[n-1] * (tmp[n-1] - 1);
+  component tmpIsz = IsZero();
 
-  out <== tmp[n-1];
-  
+  tmpIsz.in <== tmp[n-1];
+
+  out <== tmpIsz.out;
+
 }
 
 
@@ -166,40 +178,61 @@ template BattleshipInit(b) {
 
   signal pedersenInp[boardSize + 1];
 
+  signal totalGridSize[boardSize];
+
   for(var i=0; i<b; i++) {
     for(var j=0; j<b; j++) {
+      log("Checking position (", i, ",", j, ")");
 
       isCarrierOnPoint[i][j] = IsShipOnPoint(5);
       isCarrierOnPoint[i][j].ship <== carrier;
       isCarrierOnPoint[i][j].x <== i;
       isCarrierOnPoint[i][j].y <== j;
+      log("Carrier at (", i, ",", j, "): ", isCarrierOnPoint[i][j].out);
 
       isBattleshipOnPoint[i][j] = IsShipOnPoint(4);
       isBattleshipOnPoint[i][j].ship <== battleship;
       isBattleshipOnPoint[i][j].x <== i;
       isBattleshipOnPoint[i][j].y <== j;
+      log("Battleship at (", i, ",", j, "): ", isBattleshipOnPoint[i][j].out);
 
       isCruiserOnPoint[i][j] = IsShipOnPoint(3);
       isCruiserOnPoint[i][j].ship <== cruiser;
       isCruiserOnPoint[i][j].x <== i;
       isCruiserOnPoint[i][j].y <== j;
+      log("Cruiser at (", i, ",", j, "): ", isCruiserOnPoint[i][j].out);
 
       isSubmarineOnPoint[i][j] = IsShipOnPoint(3);
       isSubmarineOnPoint[i][j].ship <== submarine;
       isSubmarineOnPoint[i][j].x <== i;
       isSubmarineOnPoint[i][j].y <== j;
+      log("Submarine at (", i, ",", j, "): ", isSubmarineOnPoint[i][j].out);
 
       isDestroyerOnPoint[i][j] = IsShipOnPoint(2);
       isDestroyerOnPoint[i][j].ship <== destroyer;
       isDestroyerOnPoint[i][j].x <== i;
       isDestroyerOnPoint[i][j].y <== j;
+      log("Destroyer at (", i, ",", j, "): ", isDestroyerOnPoint[i][j].out);
 
-      grid[i][j] <== isCarrierOnPoint[i][j].out + isBattleshipOnPoint[i][j].out + isCruiserOnPoint[i][j].out + isSubmarineOnPoint[i][j].out + isDestroyerOnPoint[i][j].out;
+      grid[i][j] <== isCarrierOnPoint[i][j].out + isBattleshipOnPoint[i][j].out + 
+                     isCruiserOnPoint[i][j].out + isSubmarineOnPoint[i][j].out + 
+                     isDestroyerOnPoint[i][j].out;
 
+      log("Total ships at (", i, ",", j, "): ", grid[i][j]);
       grid[i][j] * (grid[i][j] - 1) === 0;
 
       pedersenInp[i * b + j] <== grid[i][j];
+      log("------------------------");
     }
+  }
+
+  // Add grid logging
+  log("Final Grid State:");
+  log("   0  1  2  3  4  5  6  7  8  9");
+  for(var i=0; i<b; i++) {
+    log(i, ":", grid[i][0], " ", grid[i][1], " ", grid[i][2], " ", grid[i][3], " ", 
+           grid[i][4], " ", grid[i][5], " ", grid[i][6], " ", grid[i][7], " ", 
+           grid[i][8], " ", grid[i][9]);
   }
 
   pedersenInp[boardSize] <== salt;
@@ -207,6 +240,10 @@ template BattleshipInit(b) {
   pedersen.in <== pedersenInp;
 
   out <== pedersen.out;
+
+  log("out");
+  log(out[0]);
+  log(out[1]);
 
 }
 
