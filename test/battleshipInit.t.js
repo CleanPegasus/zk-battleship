@@ -76,7 +76,6 @@ describe("BattleshipInit Circuit Test", function () {
     const submarine = [
       [0, 3],
       [1, 3],
-      [2, 3],
     ];
 
     // Destroyer (size 2) at row 4, columns 0 to 1
@@ -88,12 +87,12 @@ describe("BattleshipInit Circuit Test", function () {
     // Create and print grid visualization
     const grid = Array(10).fill().map(() => Array(10).fill('.'));
     
-    // Place ships on grid
-    carrier.forEach(([x, y]) => grid[y][x] = 'C');
-    battleship.forEach(([x, y]) => grid[y][x] = 'B');
-    cruiser.forEach(([x, y]) => grid[y][x] = 'R');
-    submarine.forEach(([x, y]) => grid[y][x] = 'S');
-    destroyer.forEach(([x, y]) => grid[y][x] = 'D');
+    // Place ships on grid with their sizes
+    carrier.forEach(([x, y]) => grid[y][x] = '5');     // Carrier - size 5
+    battleship.forEach(([x, y]) => grid[y][x] = '4');  // Battleship - size 4
+    cruiser.forEach(([x, y]) => grid[y][x] = '3');     // Cruiser - size 3
+    submarine.forEach(([x, y]) => grid[y][x] = '2');   // Submarine - size 2
+    destroyer.forEach(([x, y]) => grid[y][x] = '1');   // Destroyer - size 1
 
     // Print grid
     console.log('\nBattleship Grid:');
@@ -101,7 +100,7 @@ describe("BattleshipInit Circuit Test", function () {
     grid.forEach((row, i) => {
       console.log(`${i < 10 ? ' ' : ''}${i} ${row.join(' ')}`);
     });
-    console.log('\nLegend: C=Carrier, B=Battleship, R=Cruiser, S=Submarine, D=Destroyer\n');
+    console.log('\nLegend: 5=Carrier, 4=Battleship, 3=Cruiser, 2=Submarine, 1=Destroyer\n');
 
     // a salt value for the Pedersen hash input,
     // could be any field element (we choose 12345 as an example)

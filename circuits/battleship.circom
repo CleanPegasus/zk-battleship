@@ -142,7 +142,7 @@ template BattleshipInit(b) {
   signal input carrier[5][2];
   signal input battleship[4][2];
   signal input cruiser[3][2];
-  signal input submarine[3][2];
+  signal input submarine[2][2];
   signal input destroyer[2][2];
 
   signal input salt;
@@ -161,7 +161,7 @@ template BattleshipInit(b) {
   component cruiserConstraint = ShipConstraints(10, 3);
   cruiserConstraint.p <== cruiser;
 
-  component submarineConstraint = ShipConstraints(10, 3);
+  component submarineConstraint = ShipConstraints(10, 2);
   submarineConstraint.p <== submarine;
 
   component destroyerConstraint = ShipConstraints(10,2);
@@ -180,6 +180,8 @@ template BattleshipInit(b) {
 
   signal totalGridSize[boardSize];
 
+  signal temp[b][b];
+
   for(var i=0; i<b; i++) {
     for(var j=0; j<b; j++) {
       log("Checking position (", i, ",", j, ")");
@@ -188,7 +190,7 @@ template BattleshipInit(b) {
       isCarrierOnPoint[i][j].ship <== carrier;
       isCarrierOnPoint[i][j].x <== i;
       isCarrierOnPoint[i][j].y <== j;
-      log("Carrier at (", i, ",", j, "): ", isCarrierOnPoint[i][j].out);
+      log("Carrier at (", i, ",", j, "): ", isCarrierOnPoint[i][j].out);      
 
       isBattleshipOnPoint[i][j] = IsShipOnPoint(4);
       isBattleshipOnPoint[i][j].ship <== battleship;
@@ -202,7 +204,7 @@ template BattleshipInit(b) {
       isCruiserOnPoint[i][j].y <== j;
       log("Cruiser at (", i, ",", j, "): ", isCruiserOnPoint[i][j].out);
 
-      isSubmarineOnPoint[i][j] = IsShipOnPoint(3);
+      isSubmarineOnPoint[i][j] = IsShipOnPoint(2);
       isSubmarineOnPoint[i][j].ship <== submarine;
       isSubmarineOnPoint[i][j].x <== i;
       isSubmarineOnPoint[i][j].y <== j;
@@ -214,12 +216,16 @@ template BattleshipInit(b) {
       isDestroyerOnPoint[i][j].y <== j;
       log("Destroyer at (", i, ",", j, "): ", isDestroyerOnPoint[i][j].out);
 
-      grid[i][j] <== isCarrierOnPoint[i][j].out + isBattleshipOnPoint[i][j].out + 
+
+      temp[i][j] <== isCarrierOnPoint[i][j].out + isBattleshipOnPoint[i][j].out + 
                      isCruiserOnPoint[i][j].out + isSubmarineOnPoint[i][j].out + 
                      isDestroyerOnPoint[i][j].out;
 
-      log("Total ships at (", i, ",", j, "): ", grid[i][j]);
-      grid[i][j] * (grid[i][j] - 1) === 0;
+      temp[i][j] * (1 - temp[i][j]) === 0;
+
+      grid[i][j] <== 5 * isCarrierOnPoint[i][j].out + 4 * isBattleshipOnPoint[i][j].out + 
+                     3 * isCruiserOnPoint[i][j].out + 2 * isSubmarineOnPoint[i][j].out + 
+                     1 * isDestroyerOnPoint[i][j].out;
 
       pedersenInp[i * b + j] <== grid[i][j];
       log("------------------------");
