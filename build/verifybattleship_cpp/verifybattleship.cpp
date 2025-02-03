@@ -2632,6 +2632,217 @@ aux_cmp_num += 313;
 }
 }
 {
+printf("Verifying position: (");
+}
+{
+printf(" ");
+}
+{
+char* temp = Fr_element2str(&signalValues[mySignalStart + 3]);
+printf("%s",temp);
+delete [] temp;
+}
+{
+printf(" ");
+}
+{
+printf(",");
+}
+{
+printf(" ");
+}
+{
+char* temp = Fr_element2str(&signalValues[mySignalStart + 4]);
+printf("%s",temp);
+delete [] temp;
+}
+{
+printf(" ");
+}
+{
+printf(")");
+}
+{
+printf("\n");
+}
+{
+printf("Grid State:");
+}
+{
+printf("\n");
+}
+{
+printf("   0  1  2  3  4  5  6  7  8  9");
+}
+{
+printf("\n");
+}
+{
+PFrElement aux_dest = &lvar[1];
+// load src
+// end load src
+Fr_copy(aux_dest,&circuitConstants[1]);
+}
+Fr_lt(&expaux[0],&lvar[1],&circuitConstants[0]); // line circom 18
+while(Fr_isTrue(&expaux[0])){
+{
+char* temp = Fr_element2str(&lvar[1]);
+printf("%s",temp);
+delete [] temp;
+}
+{
+printf(" ");
+}
+{
+printf(":");
+}
+{
+printf(" ");
+}
+{
+char* temp = Fr_element2str(&signalValues[mySignalStart + (((10 * Fr_toInt(&lvar[1])) + 0) + 5)]);
+printf("%s",temp);
+delete [] temp;
+}
+{
+printf(" ");
+}
+{
+printf(" ");
+}
+{
+printf(" ");
+}
+{
+char* temp = Fr_element2str(&signalValues[mySignalStart + (((10 * Fr_toInt(&lvar[1])) + 1) + 5)]);
+printf("%s",temp);
+delete [] temp;
+}
+{
+printf(" ");
+}
+{
+printf(" ");
+}
+{
+printf(" ");
+}
+{
+char* temp = Fr_element2str(&signalValues[mySignalStart + (((10 * Fr_toInt(&lvar[1])) + 2) + 5)]);
+printf("%s",temp);
+delete [] temp;
+}
+{
+printf(" ");
+}
+{
+printf(" ");
+}
+{
+printf(" ");
+}
+{
+char* temp = Fr_element2str(&signalValues[mySignalStart + (((10 * Fr_toInt(&lvar[1])) + 3) + 5)]);
+printf("%s",temp);
+delete [] temp;
+}
+{
+printf(" ");
+}
+{
+printf(" ");
+}
+{
+printf(" ");
+}
+{
+char* temp = Fr_element2str(&signalValues[mySignalStart + (((10 * Fr_toInt(&lvar[1])) + 4) + 5)]);
+printf("%s",temp);
+delete [] temp;
+}
+{
+printf(" ");
+}
+{
+printf(" ");
+}
+{
+printf(" ");
+}
+{
+char* temp = Fr_element2str(&signalValues[mySignalStart + (((10 * Fr_toInt(&lvar[1])) + 5) + 5)]);
+printf("%s",temp);
+delete [] temp;
+}
+{
+printf(" ");
+}
+{
+printf(" ");
+}
+{
+printf(" ");
+}
+{
+char* temp = Fr_element2str(&signalValues[mySignalStart + (((10 * Fr_toInt(&lvar[1])) + 6) + 5)]);
+printf("%s",temp);
+delete [] temp;
+}
+{
+printf(" ");
+}
+{
+printf(" ");
+}
+{
+printf(" ");
+}
+{
+char* temp = Fr_element2str(&signalValues[mySignalStart + (((10 * Fr_toInt(&lvar[1])) + 7) + 5)]);
+printf("%s",temp);
+delete [] temp;
+}
+{
+printf(" ");
+}
+{
+printf(" ");
+}
+{
+printf(" ");
+}
+{
+char* temp = Fr_element2str(&signalValues[mySignalStart + (((10 * Fr_toInt(&lvar[1])) + 8) + 5)]);
+printf("%s",temp);
+delete [] temp;
+}
+{
+printf(" ");
+}
+{
+printf(" ");
+}
+{
+printf(" ");
+}
+{
+char* temp = Fr_element2str(&signalValues[mySignalStart + (((10 * Fr_toInt(&lvar[1])) + 9) + 5)]);
+printf("%s",temp);
+delete [] temp;
+}
+{
+printf("\n");
+}
+{
+PFrElement aux_dest = &lvar[1];
+// load src
+Fr_add(&expaux[0],&lvar[1],&circuitConstants[2]); // line circom 18
+// end load src
+Fr_copy(aux_dest,&expaux[0]);
+}
+Fr_lt(&expaux[0],&lvar[1],&circuitConstants[0]); // line circom 18
+}
+{
 uint cmp_index_ref = 0;
 {
 PFrElement aux_dest = &ctx->signalValues[ctx->componentMemory[mySubcomponents[cmp_index_ref]].signalStart + 10];
@@ -2688,6 +2899,48 @@ PFrElement aux_dest = &signalValues[mySignalStart + 0];
 Fr_copy(aux_dest,&ctx->signalValues[ctx->componentMemory[mySubcomponents[1]].signalStart + 0]);
 }
 {
+printf("Value at position (");
+}
+{
+printf(" ");
+}
+{
+char* temp = Fr_element2str(&signalValues[mySignalStart + 3]);
+printf("%s",temp);
+delete [] temp;
+}
+{
+printf(" ");
+}
+{
+printf(",");
+}
+{
+printf(" ");
+}
+{
+char* temp = Fr_element2str(&signalValues[mySignalStart + 4]);
+printf("%s",temp);
+delete [] temp;
+}
+{
+printf(" ");
+}
+{
+printf("): ");
+}
+{
+printf(" ");
+}
+{
+char* temp = Fr_element2str(&signalValues[mySignalStart + 0]);
+printf("%s",temp);
+delete [] temp;
+}
+{
+printf("\n");
+}
+{
 PFrElement aux_dest = &lvar[1];
 // load src
 // end load src
@@ -2699,7 +2952,7 @@ PFrElement aux_dest = &lvar[2];
 // end load src
 Fr_copy(aux_dest,&circuitConstants[1]);
 }
-Fr_lt(&expaux[0],&lvar[2],&circuitConstants[0]); // line circom 27
+Fr_lt(&expaux[0],&lvar[2],&circuitConstants[0]); // line circom 39
 while(Fr_isTrue(&expaux[0])){
 {
 PFrElement aux_dest = &lvar[3];
@@ -2707,7 +2960,7 @@ PFrElement aux_dest = &lvar[3];
 // end load src
 Fr_copy(aux_dest,&circuitConstants[1]);
 }
-Fr_lt(&expaux[0],&lvar[3],&circuitConstants[0]); // line circom 28
+Fr_lt(&expaux[0],&lvar[3],&circuitConstants[0]); // line circom 40
 while(Fr_isTrue(&expaux[0])){
 {
 PFrElement aux_dest = &signalValues[mySignalStart + ((1 * ((Fr_toInt(&lvar[2]) * 10) + Fr_toInt(&lvar[3]))) + 106)];
@@ -2718,20 +2971,20 @@ Fr_copy(aux_dest,&signalValues[mySignalStart + (((10 * Fr_toInt(&lvar[2])) + (1 
 {
 PFrElement aux_dest = &lvar[3];
 // load src
-Fr_add(&expaux[0],&lvar[3],&circuitConstants[2]); // line circom 28
+Fr_add(&expaux[0],&lvar[3],&circuitConstants[2]); // line circom 40
 // end load src
 Fr_copy(aux_dest,&expaux[0]);
 }
-Fr_lt(&expaux[0],&lvar[3],&circuitConstants[0]); // line circom 28
+Fr_lt(&expaux[0],&lvar[3],&circuitConstants[0]); // line circom 40
 }
 {
 PFrElement aux_dest = &lvar[2];
 // load src
-Fr_add(&expaux[0],&lvar[2],&circuitConstants[2]); // line circom 27
+Fr_add(&expaux[0],&lvar[2],&circuitConstants[2]); // line circom 39
 // end load src
 Fr_copy(aux_dest,&expaux[0]);
 }
-Fr_lt(&expaux[0],&lvar[2],&circuitConstants[0]); // line circom 27
+Fr_lt(&expaux[0],&lvar[2],&circuitConstants[0]); // line circom 39
 }
 {
 PFrElement aux_dest = &signalValues[mySignalStart + 206];
