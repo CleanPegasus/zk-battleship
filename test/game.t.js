@@ -57,6 +57,15 @@ async function commitBattleshipGrid() {
 
   const salt = 12345;
 
+  const grid = Array(10).fill().map(() => Array(10).fill('.'));
+    
+  // Place ships on grid with their sizes
+  carrier.forEach(([x, y]) => grid[x][y] = '5');     // Carrier - size 5
+  battleship.forEach(([x, y]) => grid[x][y] = '4');  // Battleship - size 4
+  cruiser.forEach(([x, y]) => grid[x][y] = '3');     // Cruiser - size 3
+  submarine.forEach(([x, y]) => grid[x][y] = '2');   // Submarine - size 2
+  destroyer.forEach(([x, y]) => grid[x][y] = '1');   // Destroyer - size 1
+
   const circuitInputs = {
     carrier,
     battleship,
@@ -67,7 +76,11 @@ async function commitBattleshipGrid() {
   };
 
   const [proof, publicSignals] = await generateBattleshipProof(circuitInputs);
-  return [proof, publicSignals]
+  return [proof, publicSignals, grid]
+}
+
+async function generateGridPosProof(circuitInputs) {
+
 }
 
 describe("Battleship Contract", function () {
@@ -122,7 +135,7 @@ describe("Battleship Contract", function () {
       // Now the game state moves into CommitPhase (enum value 1).
       expect(await battleship.gameState()).to.equal(1);
 
-      let [proof, publicSignals] = await commitBattleshipGrid();
+      let [proof, publicSignals, grid] = await commitBattleshipGrid();
 
       const calldata = await snarkjs.groth16.exportSolidityCallData(proof, publicSignals);
 

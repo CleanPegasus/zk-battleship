@@ -88,11 +88,11 @@ describe("BattleshipInit Circuit Test", function () {
     const grid = Array(10).fill().map(() => Array(10).fill('.'));
     
     // Place ships on grid with their sizes
-    carrier.forEach(([x, y]) => grid[y][x] = '5');     // Carrier - size 5
-    battleship.forEach(([x, y]) => grid[y][x] = '4');  // Battleship - size 4
-    cruiser.forEach(([x, y]) => grid[y][x] = '3');     // Cruiser - size 3
-    submarine.forEach(([x, y]) => grid[y][x] = '2');   // Submarine - size 2
-    destroyer.forEach(([x, y]) => grid[y][x] = '1');   // Destroyer - size 1
+    carrier.forEach(([x, y]) => grid[x][y] = '5');     // Carrier - size 5
+    battleship.forEach(([x, y]) => grid[x][y] = '4');  // Battleship - size 4
+    cruiser.forEach(([x, y]) => grid[x][y] = '3');     // Cruiser - size 3
+    submarine.forEach(([x, y]) => grid[x][y] = '2');   // Submarine - size 2
+    destroyer.forEach(([x, y]) => grid[x][y] = '1');   // Destroyer - size 1
 
     // Print grid
     console.log('\nBattleship Grid:');
@@ -119,8 +119,6 @@ describe("BattleshipInit Circuit Test", function () {
     // Calculate the witness.
     const witness = await circuit.calculateWitness(circuitInputs, true);
 
-    const solidityCall = await circuit.ge(circuitInputs, true);
-    console.log("Solidity Call: ", solidityCall);
 
     // Optionally, you can check the public output.
     //
