@@ -77,8 +77,8 @@
       ]
     },
     "/Users/cleanpegasus/Documents/peronal-projects/battleship/contracts/GridPosGroth16Verifier.sol": {
-      "lastModificationDate": 1738571851876,
-      "contentHash": "d911d179bd36a71d4eccbb8a3c6ed96f",
+      "lastModificationDate": 1738581494174,
+      "contentHash": "bd5f4afc077c8aa4b9537832ad29016f",
       "sourceName": "contracts/GridPosGroth16Verifier.sol",
       "solcConfig": {
         "version": "0.8.28",

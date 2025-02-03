@@ -19,6 +19,31 @@ async function generateBattleshipProof(circuitInputs) {
     return [proof, publicSignals]
 }
 
+async function generateGridPosProof(circuitInputs) {
+  const { proof, publicSignals } = await snarkjs.groth16.fullProve(
+    circuitInputs, 
+    "build/verifybattleship_js/verifybattleship.wasm", 
+    "build/verifybattleship_keys/verifybattleship_0001.zkey");
+
+    return [proof, publicSignals]
+}
+
+async function formatProofForVerifier(proof, publicSignals) {
+    const calldata = await snarkjs.groth16.exportSolidityCallData(proof, publicSignals);
+    const argv = calldata.replace(/["[\]\s]/g, "").split(",");
+    
+    // Extract parameters for the verifier contract
+    return {
+        pA: [argv[0], argv[1]],
+        pB: [
+            [argv[2], argv[3]],
+            [argv[4], argv[5]]
+        ],
+        pC: [argv[6], argv[7]],
+        pubSignals: argv.slice(8)
+    };
+}
+
 async function commitBattleshipGrid() {
   const carrier = [
     [0, 0],
@@ -57,7 +82,7 @@ async function commitBattleshipGrid() {
 
   const salt = 12345;
 
-  const grid = Array(10).fill().map(() => Array(10).fill('.'));
+  const grid = Array(10).fill().map(() => Array(10).fill('0'));
     
   // Place ships on grid with their sizes
   carrier.forEach(([x, y]) => grid[x][y] = '5');     // Carrier - size 5
@@ -76,12 +101,9 @@ async function commitBattleshipGrid() {
   };
 
   const [proof, publicSignals] = await generateBattleshipProof(circuitInputs);
-  return [proof, publicSignals, grid]
+  return [proof, publicSignals, grid, salt]
 }
 
-async function generateGridPosProof(circuitInputs) {
-
-}
 
 describe("Battleship Contract", function () {
   let battleship;
@@ -135,32 +157,24 @@ describe("Battleship Contract", function () {
       // Now the game state moves into CommitPhase (enum value 1).
       expect(await battleship.gameState()).to.equal(1);
 
-      let [proof, publicSignals, grid] = await commitBattleshipGrid();
+      let [proof, publicSignals, _grid, _salt] = await commitBattleshipGrid();
 
-      const calldata = await snarkjs.groth16.exportSolidityCallData(proof, publicSignals);
+      const formattedProof = await formatProofForVerifier(proof, publicSignals);
 
-      const argv = calldata.replace(/["[\]\s]/g, "").split(",");
-    
-      // Extract parameters for the verifier contract
-      const pi_a = [argv[0], argv[1]];
-      const pi_b = [
-          [argv[2], argv[3]],
-          [argv[4], argv[5]]
-      ];
-      const pi_c = [argv[6], argv[7]];
-      const inputs = argv.slice(8);
+      const {pA, pB, pC, pubSignals} = formattedProof;
+      
 
       // // --- Commit grid phase ---
       console.log("Player 1 committing grid...");
       await expect(
-        battleship.connect(player1).commitGrid(pi_a, pi_b, pi_c, inputs)
+        battleship.connect(player1).commitGrid(pA, pB, pC, pubSignals)
       )
         .to.emit(battleship, "CommitmentSubmitted")
         .withArgs(player1.address);
 
       // For player2, we set the commitment to [333, 444]
       await expect(
-        battleship.connect(player2).commitGrid(pi_a, pi_b, pi_c, inputs)
+        battleship.connect(player2).commitGrid(pA, pB, pC, pubSignals)
       )
         .to.emit(battleship, "CommitmentSubmitted")
         .withArgs(player2.address);
@@ -172,111 +186,157 @@ describe("Battleship Contract", function () {
     });
   });
 
-  // describe("Gameplay actions", function () {
-  //   // This hook joins and commits for both players so that the game is in Playing state.
-  //   beforeEach(async function () {
-  //     await battleship.connect(player1).join();
-  //     await battleship.connect(player2).join();
+  describe("Gameplay actions", function () {
+    let grid;
+    let salt;
 
-  //     const pA = [0, 0];
-  //     const pB = [
-  //       [0, 0],
-  //       [0, 0],
-  //     ];
-  //     const pC = [0, 0];
+    // This hook joins and commits for both players so that the game is in Playing state.
+    beforeEach(async function () {
+      await battleship.connect(player1).join();
+      await battleship.connect(player2).join();
 
-  //     // Set commitments: player1 -> [111, 222] and player2 -> [333, 444]
-  //     const pubSignalsPlayer1 = [111, 222];
-  //     await battleship.connect(player1).commitGrid(pA, pB, pC, pubSignalsPlayer1);
-  //     const pubSignalsPlayer2 = [333, 444];
-  //     await battleship.connect(player2).commitGrid(pA, pB, pC, pubSignalsPlayer2);
-  //   });
+      let [proof, publicSignals, _grid, _salt] = await commitBattleshipGrid();
 
-  //   it("should allow an attacker to attack and defender to submit a valid proof", async function () {
-  //     // Game is now in Playing state with player1 as currentAttacker.
-  //     // Player1 calls attack at coordinates (2, 3).
-  //     await expect(battleship.connect(player1).attack(2, 3))
-  //       .to.emit(battleship, "AttackCommitted")
-  //       .withArgs(player1.address, 2, 3);
+      grid = _grid;
+      salt = _salt;
 
-  //     // After the attack, the game phase becomes Proof (enum value 1).
-  //     expect(await battleship.currentPhase()).to.equal(1);
+      const formattedProof = await formatProofForVerifier(proof, publicSignals);
 
-  //     // --- Defender submits proof ---
-  //     // Prepare dummy proof parameters:
-  //     // pA, pB, pC are dummy arrays.
-  //     // pubSignals is a 5-element array:
-  //     //   [0]: hit indicator (set to 1 for a hit)
-  //     //   [1] & [2]: must match defender's commitment [333, 444]
-  //     //   [3] & [4]: must equal the attack coordinates (2, 3)
-  //     const pA = [0, 0];
-  //     const pB = [
-  //       [0, 0],
-  //       [0, 0],
-  //     ];
-  //     const pC = [0, 0];
-  //     const pubSignals = [1, 333, 444, 2, 3];
+      const {pA, pB, pC, pubSignals} = formattedProof;
 
-  //     await expect(
-  //       battleship.connect(player2).submitProof(pA, pB, pC, pubSignals)
-  //     )
-  //       .to.emit(battleship, "ProofSubmitted")
-  //       .withArgs(player2.address, 1);
+      // // --- Commit grid phase ---
+      console.log("Player 1 committing grid...");
+      await expect(
+        battleship.connect(player1).commitGrid(pA, pB, pC, pubSignals)
+      )
+        .to.emit(battleship, "CommitmentSubmitted")
+        .withArgs(player1.address);
 
-  //     // Since the hit indicator is 1, the attacker (player1) gains a point.
-  //     expect(await battleship.scores(player1.address)).to.equal(1);
+      // For player2, we set the commitment to [333, 444]
+      console.log("Player 2 committing grid...");
+      await expect(
+        battleship.connect(player2).commitGrid(pA, pB, pC, pubSignals)
+      )
+        .to.emit(battleship, "CommitmentSubmitted")
+        .withArgs(player2.address);
+    });
 
-  //     // Roles swap: now currentAttacker becomes player2 and currentDefender becomes player1.
-  //     expect(await battleship.currentAttacker()).to.equal(player2.address);
-  //     expect(await battleship.currentDefender()).to.equal(player1.address);
+    it("should allow an attacker to attack and defender to submit a valid proof", async function () {
+      // Game is now in Playing state with player1 as currentAttacker.
+      // Player1 calls attack at coordinates (2, 3).
 
-  //     // The phase reverts back to Attack.
-  //     expect(await battleship.currentPhase()).to.equal(0);
-  //   });
+      console.log("Player 1 attacking...");
+      let p = [2, 3];
+      await expect(battleship.connect(player1).attack(2, 3))
+        .to.emit(battleship, "AttackCommitted")
+        .withArgs(player1.address, 2, 3);
 
-  //   it("should declare game over if the attacker times out in the attack phase", async function () {
-  //     // In the Attack phase, if the turn deadline expires without an attack, timeout() should
-  //     // end the game and declare the currentDefender as the winner.
-  //     // Obtain the current turn deadline.
-  //     const currentDeadline = await battleship.currentTurnDeadline();
-  //     const currentBlock = await ethers.provider.getBlockNumber();
-  //     // Mine enough blocks (currentDeadline - currentBlock + 1 blocks) to pass the deadline.
-  //     await mineBlocks(currentDeadline.toNumber() - currentBlock + 1);
+      // After the attack, the game phase becomes Proof (enum value 1).
+      expect(await battleship.currentPhase()).to.equal(1);
 
-  //     await expect(battleship.timeout())
-  //       .to.emit(battleship, "GameOver")
-  //       .withArgs(await battleship.currentDefender());
+      console.log("Player 2 submitting proof...");
 
-  //     expect(await battleship.gameState()).to.equal(3); // GameOver (enum value 3)
-  //   });
+      console.log("Grid:", grid);
+      
+      // --- Defender submits proof ---
+      let circuitInputs = {
+        grid,
+        salt,
+        p,
+      };
 
-  //   it("should handle proof timeout and switch the turn after the proof phase times out", async function () {
-  //     // First, the attacker (player1) makes an attack.
-  //     await battleship.connect(player1).attack(4, 5);
-  //     expect(await battleship.currentPhase()).to.equal(1); // Proof phase now.
+      const [proof, publicSignals] = await generateGridPosProof(circuitInputs);
+      const formattedProof = await formatProofForVerifier(proof, publicSignals);
+      const {pA, pB, pC, pubSignals} = formattedProof;
 
-  //     // Let's simulate proof timeout:
-  //     const currentDeadline = await battleship.currentTurnDeadline();
-  //     const currentBlock = await ethers.provider.getBlockNumber();
-  //     await mineBlocks(currentDeadline.toNumber() - currentBlock + 1);
+      await expect(
+        battleship.connect(player2).submitProof(pA, pB, pC, pubSignals)
+      )
+        .to.emit(battleship, "ProofSubmitted")
+        .withArgs(player2.address, 0);
 
-  //     // In Proof phase, if timeout occurs, the contract increments the score for the attacker,
-  //     // emits a ProofSubmitted event and swaps roles.
-  //     await expect(battleship.timeout())
-  //       .to.emit(battleship, "ProofSubmitted")
-  //       .withArgs(player2.address, 1);
+    
+      expect(await battleship.scores(player1.address)).to.equal(0);
+      expect(await battleship.scores(player2.address)).to.equal(0);
 
-  //     // The attacker (player1) should have his score incremented.
-  //     expect(await battleship.scores(player1.address)).to.equal(1);
+      console.log("Player 2 attacking...");
 
-  //     // Roles should swap.
-  //     expect(await battleship.currentAttacker()).to.equal(player2.address);
-  //     expect(await battleship.currentDefender()).to.equal(player1.address);
+      p = [0, 0];
+      await expect(battleship.connect(player2).attack(0, 0))
+        .to.emit(battleship, "AttackCommitted")
+        .withArgs(player2.address, 0, 0);
 
-  //     // Phase resets back to Attack.
-  //     expect(await battleship.currentPhase()).to.equal(0);
-  //   });
-  // });
+      console.log("Player 1 submitting proof...");
+
+      circuitInputs = {
+        grid,
+        salt,
+        p,
+      };
+
+      const [proof1, publicSignals1] = await generateGridPosProof(circuitInputs);
+      const formattedProof1 = await formatProofForVerifier(proof1, publicSignals1);
+
+      await expect(
+        battleship.connect(player1).submitProof(
+          formattedProof1.pA,
+          formattedProof1.pB,
+          formattedProof1.pC,
+          formattedProof1.pubSignals
+        )
+      )
+        .to.emit(battleship, "ProofSubmitted")
+        .withArgs(player1.address, 5);
+
+      expect(await battleship.scores(player1.address)).to.equal(0);
+      expect(await battleship.scores(player2.address)).to.equal(1);
+    });
+
+    
+
+    // it("should declare game over if the attacker times out in the attack phase", async function () {
+    //   // In the Attack phase, if the turn deadline expires without an attack, timeout() should
+    //   // end the game and declare the currentDefender as the winner.
+    //   // Obtain the current turn deadline.
+    //   const currentDeadline = await battleship.currentTurnDeadline();
+    //   const currentBlock = await ethers.provider.getBlockNumber();
+    //   // Mine enough blocks (currentDeadline - currentBlock + 1 blocks) to pass the deadline.
+    //   await mineBlocks(currentDeadline.toNumber() - currentBlock + 1);
+
+    //   await expect(battleship.timeout())
+    //     .to.emit(battleship, "GameOver")
+    //     .withArgs(await battleship.currentDefender());
+
+    //   expect(await battleship.gameState()).to.equal(3); // GameOver (enum value 3)
+    // });
+
+    // it("should handle proof timeout and switch the turn after the proof phase times out", async function () {
+    //   // First, the attacker (player1) makes an attack.
+    //   await battleship.connect(player1).attack(4, 5);
+    //   expect(await battleship.currentPhase()).to.equal(1); // Proof phase now.
+
+    //   // Let's simulate proof timeout:
+    //   const currentDeadline = await battleship.currentTurnDeadline();
+    //   const currentBlock = await ethers.provider.getBlockNumber();
+    //   await mineBlocks(currentDeadline.toNumber() - currentBlock + 1);
+
+    //   // In Proof phase, if timeout occurs, the contract increments the score for the attacker,
+    //   // emits a ProofSubmitted event and swaps roles.
+    //   await expect(battleship.timeout())
+    //     .to.emit(battleship, "ProofSubmitted")
+    //     .withArgs(player2.address, 1);
+
+    //   // The attacker (player1) should have his score incremented.
+    //   expect(await battleship.scores(player1.address)).to.equal(1);
+
+    //   // Roles should swap.
+    //   expect(await battleship.currentAttacker()).to.equal(player2.address);
+    //   expect(await battleship.currentDefender()).to.equal(player1.address);
+
+    //   // Phase resets back to Attack.
+    //   expect(await battleship.currentPhase()).to.equal(0);
+    // });
+  });
 });
 
 
