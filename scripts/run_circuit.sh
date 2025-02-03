@@ -11,8 +11,10 @@ circuit_name=$1
 # Determine pot size based on circuit name
 if [ "$circuit_name" = "battleship" ]; then
     pot_size=14
+    solidity_verifier="BattleshipGroth16Verifier"
 else
     pot_size=12
+    solidity_verifier="GridPosGroth16Verifier"
 fi
 
 # Create the output directory in case it doesn't exist.
@@ -49,6 +51,6 @@ snarkjs zkey contribute "build/${circuit_name}_keys/${circuit_name}_0000.zkey" "
 snarkjs zkey export verificationkey "build/${circuit_name}_keys/${circuit_name}_0001.zkey" "build/${circuit_name}_keys/${circuit_name}_vkey.json" 
 
 # Export Solidity Verifier
-snarkjs zkey export solidityverifier "build/${circuit_name}_keys/${circuit_name}_0001.zkey" "contracts/${circuit_name}_verifier.sol"
+snarkjs zkey export solidityverifier "build/${circuit_name}_keys/${circuit_name}_0001.zkey" "contracts/${solidity_verifier}.sol"
 
 echo "All steps completed successfully."
