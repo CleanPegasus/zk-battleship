@@ -1,0 +1,77 @@
+.App {
+  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 20px;
+}
+
+.join-game {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-bottom: 20px;
+}
+
+.game-container {
+  display: flex;
+  gap: 30px;
+  margin-top: 20px;
+}
+
+/* Ship Placement Panel */
+.ship-placement {
+  max-width: 200px;
+}
+
+.orientation-toggle button {
+  margin-bottom: 10px;
+}
+
+.ships-list .ship-btn {
+  display: block;
+  margin: 4px 0;
+  padding: 5px;
+  width: 100%;
+  cursor: pointer;
+}
+
+.ships-list .ship-btn.selected {
+  background-color: yellow;
+}
+
+/* Grid Styles */
+.grid-section {
+  text-align: center;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(10, 30px);
+  grid-template-rows: repeat(10, 30px);
+  gap: 2px;
+  background: #444;
+  padding: 5px;
+}
+
+.cell {
+  width: 30px;
+  height: 30px;
+  background: #e0e0e0;
+  border: 1px solid #aaa;
+  text-align: center;
+  line-height: 30px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.buttons-row {
+  margin: 20px;
+  display: flex;
+  gap: 10px;
+}
+
+.start-game,
+.undo-button {
+  font-size: 16px;
+  padding: 8px 15px;
+}
