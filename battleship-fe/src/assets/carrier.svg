@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 200">
+  <!-- Main hull -->
+  <path d="M 20 100 L 40 80 L 460 80 L 480 100 L 480 140 L 20 140 Z" fill="#505050"/>
+  
+  <!-- Flight deck -->
+  <rect x="30" y="60" width="440" height="20" fill="#333333"/>
+  
+  <!-- Landing strip markings -->
+  <line x1="50" y1="70" x2="450" y2="70" stroke="white" stroke-width="2" stroke-dasharray="20,20"/>
+  <line x1="50" y1="65" x2="450" y2="65" stroke="yellow" stroke-width="2" stroke-dasharray="10,10"/>
+  <line x1="50" y1="75" x2="450" y2="75" stroke="yellow" stroke-width="2" stroke-dasharray="10,10"/>
+  
+  <!-- Control tower -->
+  <path d="M 300 60 L 350 60 L 350 20 L 320 10 L 300 20 Z" fill="#404040"/>
+  <rect x="310" y="30" width="30" height="15" fill="#87CEEB"/>
+  
+  <!-- Details -->
+  <rect x="40" y="90" width="400" height="10" fill="#606060"/>
+  <rect x="60" y="110" width="360" height="20" fill="#404040"/>
+</svg>

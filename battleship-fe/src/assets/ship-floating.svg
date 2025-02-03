@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 120">
+  <!-- Ship hull -->
+  <path d="M 20 80 L 40 60 L 160 60 L 180 80 C 140 90, 60 90, 20 80 Z" fill="#8B4513"/>
+  
+  <!-- Ship deck -->
+  <rect x="50" y="40" width="100" height="20" fill="#DEB887"/>
+  
+  <!-- Masts -->
+  <line x1="70" y1="40" x2="70" y2="10" stroke="#8B4513" stroke-width="4"/>
+  <line x1="130" y1="40" x2="130" y2="10" stroke="#8B4513" stroke-width="4"/>
+  
+  <!-- Sails -->
+  <path d="M 72 10 Q 90 20, 72 40" fill="white" stroke="#DEB887"/>
+  <path d="M 132 10 Q 150 20, 132 40" fill="white" stroke="#DEB887"/>
+  
+  <!-- Windows -->
+  <circle cx="80" cy="70" r="5" fill="#F0E68C"/>
+  <circle cx="100" cy="70" r="5" fill="#F0E68C"/>
+  <circle cx="120" cy="70" r="5" fill="#F0E68C"/>
+</svg>

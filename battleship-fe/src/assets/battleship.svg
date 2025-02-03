@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 160">
+  <!-- Main hull -->
+  <path d="M 20 80 L 40 60 L 360 60 L 380 80 L 380 120 L 20 120 Z" fill="#555555"/>
+  
+  <!-- Turrets -->
+  <g fill="#444444">
+    <circle cx="100" cy="50" r="20"/>
+    <circle cx="200" cy="50" r="20"/>
+    <circle cx="300" cy="50" r="20"/>
+  </g>
+  
+  <!-- Gun barrels -->
+  <g stroke="#333333" stroke-width="8">
+    <line x1="100" y1="45" x2="70" y2="35"/>
+    <line x1="200" y1="45" x2="170" y2="35"/>
+    <line x1="300" y1="45" x2="270" y2="35"/>
+  </g>
+  
+  <!-- Deck details -->
+  <rect x="50" y="70" width="300" height="10" fill="#666666"/>
+  <rect x="80" y="90" width="240" height="20" fill="#444444"/>
+</svg>

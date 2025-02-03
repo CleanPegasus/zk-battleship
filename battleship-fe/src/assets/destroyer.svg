@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 250 120">
+  <!-- Main hull -->
+  <path d="M 10 60 L 30 40 L 220 40 L 240 60 L 240 90 L 10 90 Z" fill="#777777"/>
+  
+  <!-- Front gun -->
+  <circle cx="50" cy="35" r="12" fill="#666666"/>
+  <line x1="50" y1="30" x2="35" y2="25" stroke="#555555" stroke-width="5"/>
+  
+  <!-- Rear gun -->
+  <circle cx="200" cy="35" r="12" fill="#666666"/>
+  <line x1="200" y1="30" x2="185" y2="25" stroke="#555555" stroke-width="5"/>
+  
+  <!-- Bridge -->
+  <path d="M 110 35 L 140 35 L 140 15 L 125 10 L 110 15 Z" fill="#666666"/>
+  <rect x="115" y="20" width="20" height="8" fill="#87CEEB"/>
+  
+  <!-- Deck details -->
+  <rect x="40" y="50" width="170" height="5" fill="#888888"/>
+  <rect x="60" y="65" width="130" height="15" fill="#666666"/>
+</svg>

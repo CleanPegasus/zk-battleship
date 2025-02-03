@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 100">
+  <!-- Main hull -->
+  <ellipse cx="150" cy="50" rx="140" ry="30" fill="#555555"/>
+  
+  <!-- Conning tower -->
+  <path d="M 120 20 L 180 20 L 170 5 L 130 5 Z" fill="#444444"/>
+  
+  <!-- Periscope -->
+  <rect x="145" y="0" width="10" height="15" fill="#333333"/>
+  
+  <!-- Front planes -->
+  <path d="M 20 50 L 0 70 L 0 30 Z" fill="#444444"/>
+  
+  <!-- Rear planes -->
+  <path d="M 280 50 L 300 70 L 300 30 Z" fill="#444444"/>
+  
+  <!-- Details -->
+  <circle cx="100" cy="40" r="5" fill="#666666"/>
+  <circle cx="120" cy="40" r="5" fill="#666666"/>
+  <circle cx="140" cy="40" r="5" fill="#666666"/>
+</svg>
