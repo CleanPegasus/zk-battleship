@@ -119,6 +119,9 @@ describe("BattleshipInit Circuit Test", function () {
     // Calculate the witness.
     const witness = await circuit.calculateWitness(circuitInputs, true);
 
+    const solidityCall = await circuit.ge(circuitInputs, true);
+    console.log("Solidity Call: ", solidityCall);
+
     // Optionally, you can check the public output.
     //
     // In our circuit, 'out' is the Pedersen hash result (an array of 2 numbers).
@@ -167,7 +170,6 @@ describe("BattleshipInit Circuit Test", function () {
     const submarine = [
       [0, 3],
       [1, 3],
-      [2, 3],
     ];
     const destroyer = [
       [0, 4],
@@ -231,7 +233,6 @@ describe("BattleshipInit Circuit Test", function () {
     const submarine = [
       [0, 3],
       [1, 3],
-      [2, 3],
     ];
     const destroyer = [
       [0, 4],

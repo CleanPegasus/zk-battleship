@@ -1,0 +1,116 @@
+{
+  "_format": "hh-sol-cache-2",
+  "files": {
+    "/Users/cleanpegasus/Documents/peronal-projects/battleship/contracts/Battleship.sol": {
+      "lastModificationDate": 1738572632642,
+      "contentHash": "13d681615d76808b21753d74c24e99ee",
+      "sourceName": "contracts/Battleship.sol",
+      "solcConfig": {
+        "version": "0.8.28",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./BattleshipGroth16Verifier.sol",
+        "./GridPosGroth16Verifier.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "Battleship"
+      ]
+    },
+    "/Users/cleanpegasus/Documents/peronal-projects/battleship/contracts/BattleshipGroth16Verifier.sol": {
+      "lastModificationDate": 1738578147832,
+      "contentHash": "0a04b61793e7b949811830bb17c874ff",
+      "sourceName": "contracts/BattleshipGroth16Verifier.sol",
+      "solcConfig": {
+        "version": "0.8.28",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        ">=0.7.0 <0.9.0"
+      ],
+      "artifacts": [
+        "BattleshipGroth16Verifier"
+      ]
+    },
+    "/Users/cleanpegasus/Documents/peronal-projects/battleship/contracts/GridPosGroth16Verifier.sol": {
+      "lastModificationDate": 1738571851876,
+      "contentHash": "d911d179bd36a71d4eccbb8a3c6ed96f",
+      "sourceName": "contracts/GridPosGroth16Verifier.sol",
+      "solcConfig": {
+        "version": "0.8.28",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        ">=0.7.0 <0.9.0"
+      ],
+      "artifacts": [
+        "GridPosGroth16Verifier"
+      ]
+    }
+  }
+}
